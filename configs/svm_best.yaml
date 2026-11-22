@@ -1,0 +1,79 @@
+# Best SVM config, selected from W&B run zllgpx3v (svm-char+word+shape+func-C0.5-shapew0.3), CV balanced acc 0.3700.
+# Written by scripts/select_best_svm.py - kaggle/svm_submit.py inlines these values.
+seed: 42
+data_dir: data
+folds_path: data/folds.csv
+n_folds: 5
+output_dir: artifacts/svm
+name_suffix: shapew0.3
+use_views:
+- char
+- word
+- shape
+- func
+views:
+  char:
+    min_df: 2
+    weight: 1
+    analyzer: char
+    lowercase: false
+    transform: raw
+    ngram_range:
+    - 3
+    - 5
+    max_features: 300000
+    sublinear_tf: true
+  func:
+    min_df: 2
+    weight: 0.5
+    analyzer: word
+    lowercase: true
+    transform: func
+    ngram_range:
+    - 1
+    - 3
+    sublinear_tf: true
+    token_pattern: (?u)\b\w+\b|[^\w\s]
+  word:
+    min_df: 2
+    weight: 0.7
+    analyzer: word
+    lowercase: true
+    transform: raw
+    ngram_range:
+    - 1
+    - 3
+    sublinear_tf: true
+    token_pattern: (?u)\b\w+\b|[^\w\s]
+  shape:
+    min_df: 2
+    weight: 0.3
+    analyzer: char
+    lowercase: false
+    transform: shape
+    ngram_range:
+    - 2
+    - 6
+    sublinear_tf: true
+model:
+  C: 0.5
+  max_iter: 5000
+  class_weight: balanced
+temperature_grid:
+- 0.05
+- 0.1
+- 0.2
+- 0.5
+- 1
+wandb:
+  tags:
+  - svm
+  - tfidf
+  - cpu
+  group: svm
+  project: name-that-llm
+temperature: 0.1
+selected_from:
+  run_id: zllgpx3v
+  run_name: svm-char+word+shape+func-C0.5-shapew0.3
+  cv/balanced_acc: 0.37004

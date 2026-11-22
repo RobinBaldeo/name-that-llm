@@ -1,0 +1,10 @@
+numpy>=2.0
+pandas>=2.2
+scikit-learn>=1.6
+scipy>=1.14
+joblib>=1.4
+pyyaml>=6.0
+pyarrow>=18.0
+wandb>=0.19
+python-dotenv>=1.0
+pytest>=8.0

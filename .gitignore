@@ -1,0 +1,21 @@
+# secrets
+.env
+
+# environments / caches
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# data, experiment outputs, model files
+data/
+wandb/
+artifacts/
+*.joblib
+*.npy
+
+# kaggle script outputs when run from the repo root
+/submission.parquet
+/svm_test_scores.npy
+spec/

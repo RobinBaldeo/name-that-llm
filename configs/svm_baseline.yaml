@@ -1,0 +1,48 @@
+# Experiment 1: reconstruction of the old 2-view baseline (svm_baseline.py, CV 0.344):
+# char 1-5 + word 1-2 TF-IDF, equal weights, LinearSVC C=0.1.
+# The original script is not in this repo, so details not given in the spec are
+# reconstructed. A probe over the unstated choices (char case, char vs char_wb, min_df,
+# max_features, sublinear_tf, word token pattern) showed only the punctuation-keeping
+# word token pattern lands near 0.344 (0.340); sklearn's default pattern gives 0.314.
+
+seed: 42
+data_dir: data
+folds_path: data/folds.csv
+n_folds: 5
+output_dir: artifacts/svm
+n_jobs: null
+tag: baseline2v
+
+use_views: [char, word]
+
+views:
+  char:
+    transform: raw
+    analyzer: char
+    ngram_range: [1, 5]
+    weight: 1.0
+    lowercase: false
+    max_features: 300000
+    min_df: 2
+    sublinear_tf: true
+  word:
+    transform: raw
+    analyzer: word
+    ngram_range: [1, 2]
+    weight: 1.0
+    lowercase: true
+    token_pattern: '(?u)\b\w+\b|[^\w\s]'
+    min_df: 2
+    sublinear_tf: true
+
+model:
+  C: 0.1
+  class_weight: balanced
+  max_iter: 5000
+
+temperature_grid: [0.05, 0.1, 0.2, 0.5, 1.0]
+
+wandb:
+  project: name-that-llm
+  group: svm
+  tags: [svm, tfidf, cpu, baseline]

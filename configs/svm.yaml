@@ -1,0 +1,60 @@
+# Default 4-view TF-IDF + LinearSVC (SPEC_svm §3-§4).
+# Run:  python -m ntl.svm.cv --config configs/svm.yaml [--override C=0.25] [--override views=char,word]
+
+seed: 42
+data_dir: data
+folds_path: data/folds.csv
+n_folds: 5
+output_dir: artifacts/svm
+n_jobs: null            # FeatureUnion parallelism over views (null = 1 process)
+
+use_views: [char, word, shape, func]
+
+views:
+  char:
+    transform: raw
+    analyzer: char
+    ngram_range: [3, 5]
+    weight: 1.0
+    lowercase: false
+    max_features: 300000
+    min_df: 2
+    sublinear_tf: true
+  word:
+    transform: raw
+    analyzer: word
+    ngram_range: [1, 3]
+    weight: 0.7
+    lowercase: true
+    token_pattern: '(?u)\b\w+\b|[^\w\s]'
+    min_df: 2
+    sublinear_tf: true
+  shape:
+    transform: shape
+    analyzer: char
+    ngram_range: [2, 6]
+    weight: 0.5
+    lowercase: false
+    min_df: 2
+    sublinear_tf: true
+  func:
+    transform: func
+    analyzer: word
+    ngram_range: [1, 3]
+    weight: 0.5
+    lowercase: true
+    token_pattern: '(?u)\b\w+\b|[^\w\s]'
+    min_df: 2
+    sublinear_tf: true
+
+model:
+  C: 0.5
+  class_weight: balanced
+  max_iter: 5000
+
+temperature_grid: [0.05, 0.1, 0.2, 0.5, 1.0]
+
+wandb:
+  project: name-that-llm
+  group: svm
+  tags: [svm, tfidf, cpu]
